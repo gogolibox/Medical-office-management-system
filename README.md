@@ -38,13 +38,15 @@ The system ensures data consistency using database triggers for conflict prevent
    pip install streamlit pandas
 
 2. Initialize the database:
-   python init_db.py
+   python3 init_db.py
 
-3. Run the application:
-   streamlit run app.py
+3.1. Run CLI version:
+     python3 cli_app.py
 
-4. Open in browser:
-   http://localhost:8501
+3.2. Run Web version:
+     streamlit run app_streamlit.py
+      3.2.1. Open in browser:
+         http://localhost:8501
 
 ---
 
