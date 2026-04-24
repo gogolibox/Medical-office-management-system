@@ -1,16 +1,49 @@
 # Clinic Appointment System
 
-## Description
+## Overview
 
-This project is a Clinic Appointment Management System developed in Python.
-It provides a web-based interface using Streamlit and uses SQLite as the database.
+This project is a clinic appointment management system developed in Python. It supports both a web-based interface using Streamlit and a command-line interface (CLI).
 
-The system supports two roles:
+The system allows patients to register, log in, view schedules, book appointments, and cancel them. Administrators can manage doctors, schedules, and appointments.
 
-* Patients: can register, log in, book, view, and cancel appointments
-* Admin: can manage doctors, schedules, and all appointments
+The design separates backend logic from the user interface, allowing multiple interfaces to use the same core functionality.
 
-The system ensures data consistency using database triggers for conflict prevention and automatic updates.
+---
+
+## Features
+
+### Patient
+
+* Sign up and login
+* View doctor schedules
+* Book appointments
+* View personal appointments
+* Cancel appointments
+
+### Admin
+
+* Login (admin password required)
+* Add doctors and generate schedules
+* View all appointments
+* Cancel any appointment
+* Cancel schedule slots
+* Delete doctors
+
+---
+
+## Project Structure
+
+```
+clinic-appointment-system/
+│
+├── app_streamlit.py     # Streamlit web interface
+├── cli_app.py           # Command-line interface
+├── backend.py           # Core logic and database operations
+├── init_db.py           # Database initialization (tables and triggers)
+├── clinic.db            # SQLite database (created after initialization)
+│
+└── README.md
+```
 
 ---
 
@@ -23,130 +56,106 @@ The system ensures data consistency using database triggers for conflict prevent
 
 ---
 
-## Project Structure
+## Getting Started
 
-* `app.py` → Streamlit frontend (UI and navigation)
-* `backend.py` → Business logic and database operations
-* `init_db.py` → Database creation (tables + triggers)
-* `clinic.db` → SQLite database (generated after running init_db.py)
+### 1. Install dependencies
 
----
+```
+pip install streamlit pandas
+```
 
-## How to Run
+### 2. Initialize the database
 
-1. Install required packages:
-   pip install streamlit pandas
+```
+python init_db.py
+```
 
-2. Initialize the database:
-   python3 init_db.py
+### 3. Run the application
 
-3.1. Run CLI version:  
-     python3 cli_app.py
+Web interface:
 
-3.2. Run Web version:  
-      streamlit run app_streamlit.py  
-      Open in browser:  
-      http://localhost:8501  
+```
+streamlit run app_streamlit.py
+```
 
----
+Command-line interface:
 
-## System Features
-
-Patient Features:
-
-* Sign up with national ID
-* Login securely
-* View doctor schedules
-* Book appointments
-* View personal appointments
-* Cancel appointments
-
-Admin Features:
-
-* Login (password: 1234)
-* Add doctors and generate weekly schedules
-* View all appointments
-* Cancel any appointment
-* Cancel schedule slots (with cascading effect)
-* Delete doctors
+```
+python cli_app.py
+```
 
 ---
 
 ## Database Design
 
-Tables:
+### Tables
 
-1. patients
+patients
 
-   * patient_id (PK)
-   * national_id
-   * name
-   * last_name
-   * password
+* patient_id (Primary Key)
+* national_id
+* name
+* last_name
+* password
 
-2. doctor_info
+doctor_info
 
-   * doctor_id (PK)
-   * doctor_name
-   * expertise
+* doctor_id (Primary Key)
+* doctor_name
+* expertise
 
-3. doctor_schedule
+doctor_schedule
 
-   * id (PK)
-   * doctor_id (FK)
-   * day_of_week
-   * start_time
-   * end_time
-   * status (AVAILABLE / BOOKED / CANCELED)
+* id (Primary Key)
+* doctor_id (Foreign Key)
+* day_of_week
+* start_time
+* end_time
+* status (AVAILABLE, BOOKED, CANCELED)
 
-4. appointments
+appointments
 
-   * id (PK)
-   * doctor_id (FK)
-   * patient_id (FK)
-   * start_ts
-   * end_ts
-   * status (CONFIRMED / CANCELED)
+* id (Primary Key)
+* doctor_id (Foreign Key)
+* patient_id (Foreign Key)
+* start_ts
+* end_ts
+* status (CONFIRMED, CANCELED)
 
 ---
 
-## Database Triggers (Important Logic)
+## Database Logic (Triggers)
 
-* Prevent doctor double-booking
-  → A doctor cannot have overlapping confirmed appointments
+The system uses SQLite triggers to enforce consistency:
 
-* Prevent patient schedule conflicts
-  → A patient cannot book overlapping appointments
-
-* Auto-reserve slot
-  → When an appointment is created, the schedule slot becomes BOOKED
-
-* Auto-free slot
-  → When an appointment is canceled, the slot becomes AVAILABLE
+* Prevent overlapping appointments for the same doctor
+* Prevent overlapping appointments for the same patient
+* Automatically mark a schedule slot as BOOKED after reservation
+* Automatically free a slot when an appointment is canceled
 
 ---
 
 ## Important Notes
 
-* Admin password is hardcoded: 1234
+* Admin password is hardcoded as: 1234
 * Time format must be HH:MM
 * Schedule slots are generated automatically when adding a doctor
-* Canceling a schedule slot by admin also cancels related appointments
-* Conflict handling is enforced at the database level (via triggers)
+* Canceling a time slot also cancels related appointments
+* Conflict handling is enforced at the database level
 
 ---
 
 ## Future Improvements
 
-* Secure password hashing
-* Role-based authentication system
-* Improved UI/UX
-* Deployment (web hosting)
-* Notification system (email/SMS)
+* Secure password storage (hashing)
+* Improved authentication system
+* Enhanced user interface
+* Deployment to a web server
+* Notification system (email or SMS)
 
 ---
 
 ## Author
 
-Alireza Ranjbar
+Alireza Ranjbar  
 email: alireza.ranjbar1384@gmail.com
