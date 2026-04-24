@@ -37,7 +37,7 @@ The design separates backend logic from the user interface, allowing multiple in
 clinic-appointment-system/
 │
 ├── app_streamlit.py     # Streamlit web interface
-├── cli_app.py           # Command-line interface
+├── app_cli.py           # Command-line interface
 ├── backend.py           # Core logic and database operations
 ├── init_db.py           # Database initialization (tables and triggers)
 ├── clinic.db            # SQLite database (created after initialization)
@@ -67,7 +67,7 @@ pip install streamlit pandas
 ### 2. Initialize the database
 
 ```
-python init_db.py
+python3 init_db.py
 ```
 
 ### 3. Run the application
@@ -81,7 +81,7 @@ streamlit run app_streamlit.py
 Command-line interface:
 
 ```
-python cli_app.py
+python3 app_cli.py
 ```
 
 ---
